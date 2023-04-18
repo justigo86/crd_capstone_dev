@@ -46,7 +46,6 @@ const SignUpForm = () => {
     setFormFields(defaultFormFields);
   }
 
-
   return (
     <div className="sign-up-container">
       <h2>Don't have an account?</h2>
@@ -91,7 +90,7 @@ const SignUpForm = () => {
           required
           value={confirmPassword}
         />
-        
+
         <Button type="submit">Sign Up</Button>
       </form>
     </div>
