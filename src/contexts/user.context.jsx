@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { onAuthStateChangedListener } from "../utils/firebase/firebase.utils";
+import { onAuthStateChangedListener, createUserDocumentFromAuth } from "../utils/firebase/firebase.utils";
 //Context serves as external storage to send/fetch data/state throughout an app without using props
 
 //create the context here
@@ -15,9 +15,15 @@ export const UserProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const value = { currentUser, setCurrentUser };  //using in order to call both the setter and the value
 
-  useEffect(() => {
+  //useEffect largely uses functionality previously used in sign-in/up forms
+  useEffect(() => {   //used to mount onAuthStateChangedListener on component mount (for any auth component)
+    //the function returned by onAuthStateChangedListener is being assigned to unsubscribe
     const unsubscribe = onAuthStateChangedListener((user) => {
-      console.log(user)
+      if (user) {
+        createUserDocumentFromAuth(user);
+      }
+      setCurrentUser(user)
+        //if the user signs out, we store null - they sign in, we store the user object
     })
 
     return unsubscribe;

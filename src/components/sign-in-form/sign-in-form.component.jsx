@@ -1,13 +1,11 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 import './sign-in-form.styles.scss';
 import {
-  createUserDocumentFromAuth,
   signInAuthUserWithEmailAndPassword,
   signInWithGooglePopup
 } from "../../utils/firebase/firebase.utils";
-import { UserContext } from "../../contexts/user.context";
 
 const defaultFormFields = {
   email: '',
@@ -18,7 +16,7 @@ const SignInForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { email, password } = formFields;
 
-  const { setCurrentUser } = useContext(UserContext);
+  // const { setCurrentUser } = useContext(UserContext); - functionality moved to user.context
   //pulling setCurrentUser from Context to set Context state for value currentUser
 
   const handleChange = (event) => {
@@ -37,8 +35,9 @@ const SignInForm = () => {
     }
 
     try {
-      const { user } = await signInAuthUserWithEmailAndPassword(email, password);
-      setCurrentUser(user);   //when we receive user information - used to set Context currentUser value
+      //const { user } = 
+      await signInAuthUserWithEmailAndPassword(email, password);
+      //setCurrentUser(user);   //when we receive user information - used to set Context currentUser value
       resetFormFields();
     } catch (err) {
       switch(err.code) {
@@ -55,9 +54,10 @@ const SignInForm = () => {
   }
 
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
-    setCurrentUser(user);
-    await createUserDocumentFromAuth(user);
+    //const { user } = 
+    await signInWithGooglePopup();
+    //setCurrentUser(user);   //functionality moved/centralized in user.context
+    // await createUserDocumentFromAuth(user);  //also moved to user.context
   }
 
   const resetFormFields = () => {

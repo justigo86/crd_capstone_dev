@@ -89,4 +89,6 @@ export const signInAuthUserWithEmailAndPassword = async (email, password) => {
 export const signOutUser = async () => await signOut(auth);
 
 export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
-//using callback as argument as second param
+//onAuthStateChange returns an observer listener - subscribes to auth changes and calls callback - returns function
+// - onAuthStateChangedListener just makes sure we get a callback for onAuthStateChanged as second param
+//in the observer subscription, the callback is the 'next' method

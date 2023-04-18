@@ -1,9 +1,8 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import { createAuthUserWithEmailAndPassword, createUserDocumentFromAuth } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 import './sign-up-form.styles.scss';
-import { UserContext } from "../../contexts/user.context";
 
 //create object for useState to update
 //note: we do not want to store this information because it is sensitive
@@ -18,7 +17,7 @@ const SignUpForm = () => {
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
 
-  const { setUserContext } = useContext(UserContext);
+  // const { setUserContext } = useContext(UserContext);  - //functionality moved/centralized in user.context
 
   const handleChange = (event) => {   //change has been generalized for incoming form data entry
     const { name, value } = event.target;
