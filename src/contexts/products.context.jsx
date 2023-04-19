@@ -1,5 +1,4 @@
 import { createContext, useState } from "react";
-// import { onAuthStateChangedListener, createUserDocumentFromAuth } from "../utils/firebase/firebase.utils";
 import PRODUCTS from "../mock-shop-data.json";
 
 export const ProductsContext = createContext({
