@@ -1,4 +1,4 @@
-import './form-input.styles.scss';
+import "./form-input.styles.scss";
 
 const FormInput = ({ label, ...inputProps }) => {
   //input above label in form due to subsequent-sibling combinator to apply focus css on click (not type)
@@ -7,7 +7,7 @@ const FormInput = ({ label, ...inputProps }) => {
       <input className="form-input" {...inputProps}/>
       {label && (
         <label
-          className={`${inputProps.value.length ? 'shrink' : ''} form-input-label`}
+          className={`${inputProps.value.length ? "shrink" : ""} form-input-label`}
         >
           {label}
         </label>

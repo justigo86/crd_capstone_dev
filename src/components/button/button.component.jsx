@@ -1,8 +1,8 @@
-import './button.styles.scss';
+import "./button.styles.scss";
 
 const button_type_classes = {   //object used for applying classNames to buttons
-  google: 'google-sign-in',
-  inverted: 'inverted'
+  google: "google-sign-in",
+  inverted: "inverted"
 }
 
 const Button = ({children, buttonType, ...buttonProps}) => {

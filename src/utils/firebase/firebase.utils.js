@@ -10,13 +10,13 @@ import {
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
   onAuthStateChanged
-} from 'firebase/auth';
+} from "firebase/auth";
 import {
   getFirestore,
   doc,    //data from instance(s)
   getDoc, //get doc data
   setDoc  //set doc data
-} from 'firebase/firestore'
+} from "firebase/firestore"
 
 //user sign-in and authentication with Firebase
 
@@ -49,9 +49,9 @@ export const db = getFirestore();   //used to point to and access database
 export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) => {  //take data from from auth and store in Firestore
   if (!userAuth) return;
 
-  const userDocRef = doc(db, 'users', userAuth.uid)//see if there is an existing document reference
+  const userDocRef = doc(db, "users", userAuth.uid)//see if there is an existing document reference
     //3 arguments = database instance, document path, user.uid (pulled from Google User SignIn fetch response)
-    //give me the document from within the DB, within 'users' collection, for this user ID
+    //give me the document from within the DB, within "users" collection, for this user ID
     console.log(userDocRef);
 
     const userSnapshot = await getDoc(userDocRef);
@@ -67,7 +67,7 @@ export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) 
           displayName, email, createdAt, ...additionalInfo,
         });
       } catch (err) {
-        console.log('error creating user', err.message);
+        console.log("error creating user", err.message);
       }
     }
     //if user exists
@@ -91,4 +91,4 @@ export const signOutUser = async () => await signOut(auth);
 export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth, callback);
 //onAuthStateChange returns an observer listener - subscribes to auth changes and calls callback - returns function
 // - onAuthStateChangedListener just makes sure we get a callback for onAuthStateChanged as second param
-//in the observer subscription, the callback is the 'next' method
+//in the observer subscription, the callback is the "next" method
