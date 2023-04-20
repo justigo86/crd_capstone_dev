@@ -6,20 +6,36 @@ export const CartContext = createContext({
   cartItems: [],
   addItemToCart: () => {},
   cartCount: 0,
+  removeItemFromCart: () => {},
 });
 
+//NOTE: over the next two functions, we are always creating a new object on return
+//this is done because mutating the original object does not trigger a re-render
 const addItem = (cartItems, product) => {
   const existingCartItem = cartItems.find(item => item.id === product.id);
 
   if (existingCartItem) {
-    return cartItems.map((cartItem) =>
-      cartItem.id === product.id
-      ? { ...cartItem, quantity: cartItem.quantity + 1}
-      : cartItem
+    return cartItems.map((item) =>
+      item.id === product.id
+      ? { ...item, quantity: item.quantity + 1}
+      : item
     )
   }
 
   return [...cartItems, {...product, quantity: 1}]
+}
+const removeItem = (cartItems, product) => {
+  const existingCartItem = cartItems.find(item => item.id === product.id);
+
+  if (existingCartItem.quantity === 1) {
+    return cartItems.filter(item => item.id !== product.id)
+      //keep the items that don't match the product being removed ID
+  }
+  return cartItems.map((item) =>
+    item.id === product.id
+    ? { ...item, quantity: item.quantity - 1}
+    : item
+  )
 }
 
 export const CartProvider = ({ children }) => {
@@ -38,11 +54,20 @@ export const CartProvider = ({ children }) => {
     setCartItems(addItem(cartItems, product));
   }
 
-  const value = { cartOpen, setCartOpen, cartItems, addItemToCart, cartCount };
+  const removeItemFromCart = (product) => {
+    setCartItems(removeItem(cartItems, product));
+  }
+
+  const value = {
+    cartOpen,
+    setCartOpen,
+    cartItems,
+    addItemToCart,
+    cartCount,
+    removeItemFromCart
+  };
 
   return (
-    <CartContext.Provider value={value}>
-      {children}
-    </CartContext.Provider>
+    <CartContext.Provider value={value}>{children}</CartContext.Provider>
   )
 }
