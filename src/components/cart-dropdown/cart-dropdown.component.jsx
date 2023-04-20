@@ -3,6 +3,7 @@ import Button from "../button/button.component";
 import { useContext } from "react";
 import { CartContext } from "../../contexts/cart.context";
 import CartItem from "../cart-item/cart-item.component";
+import { Link } from 'react-router-dom';
 
 //to be imported into navigation component
 const CartDropdown = () => {
@@ -13,7 +14,11 @@ const CartDropdown = () => {
       <div className="cart-items">
         {cartItems.map(item => <CartItem key={item.id} cartItem={item} />)}
       </div>
-      <Button buttonType={''}>GO TO CHECKOUT</Button>
+      <Button buttonType={''}>
+        <Link to="/checkout">
+          GO TO CHECKOUT
+        </Link>
+      </Button>
     </div>
   );
 }
