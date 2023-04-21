@@ -15,10 +15,17 @@ import {
   getFirestore,
   doc,    //data from instance(s)
   getDoc, //get doc data
-  setDoc  //set doc data
+  setDoc,  //set doc data
+  collection,
+  writeBatch,
+  query,
+  getDocs,
 } from "firebase/firestore"
 
 //user sign-in and authentication with Firebase
+//each function is created so that the Firebase methods do not have to be called in code/files
+  //centralizes Firestore and Firestore jargon here
+  //also helps because Firestore frquently changes methods
 
 const firebaseConfig = {
   apiKey: "AIzaSyBeP-ig2ZdkzJinHwGLMIuANbDdHLrpn5E",
@@ -33,7 +40,6 @@ const firebaseApp = initializeApp(firebaseConfig);
 //initializeApp is function that allows us to interact with our instance of Firebase - by calling it with config info
 //all things firebase will be run through firebaseApp - e.g., CRUD actions
 
-
 const provider = new GoogleAuthProvider();  //a class that we will want multiple instances of
 provider.setCustomParameters({
   prompt: "select_account"      //when user interacts with provider - they have to select an account
@@ -45,6 +51,36 @@ export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
 export const signInWithGoogleRedirect = () => signInWithRedirect(auth, provider);
 
 export const db = getFirestore();   //used to point to and access database
+
+//used to create a collection in the db - async bc interacting with Firebase db
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+  const collectionRef = collection(db, collectionKey);
+    //as a reference point - get the collection out of the db (getFireStore()) using the passed in collectionKey
+  //need to add store data (objects) to the categories in the db
+  const batch = writeBatch(db);   //returns db batch
+  objectsToAdd.forEach((object) => {  //looping through objects to run Set events (write)
+    const docRef = doc(collectionRef, object.title.toLowerCase());
+      //gets docReference instance of doc within param1 that matches param2
+    batch.set(docRef, object);  //write location using the object being passed in
+  });
+  await batch.commit(); //asynchronously commit
+  console.log("done writing batch");
+}
+
+//async again because of Firebase interaction
+export const getCategoriesAndDocuments = async () => {
+  const collectionRef = collection(db, "categories");
+  //next section is unique to Firestore
+  const q = query(collectionRef); //retrieves object of data with query
+  const querySnapshot = await getDocs(q); //asynchronously saves snapshot of the object
+  //querySnapshot.docs retrieves an array from the snapshot
+  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+    const { title, items } = docSnapshot.data();
+    acc[title.toLowerCase()] = items;
+    return acc;
+  }, {});
+  return categoryMap;
+}
 
 export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) => {  //take data from from auth and store in Firestore
   if (!userAuth) return;
