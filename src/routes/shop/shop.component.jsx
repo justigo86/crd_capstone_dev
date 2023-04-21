@@ -1,27 +1,16 @@
-import { Fragment, useContext } from "react";
-import { CategoriesContext } from "../../contexts/categories.context";
-import ProductCard from "../../components/product-card/product-card.component";
 import "./shop.styles.scss";
+import CategoriesPreview from "../../routes/categories-preview/categories-preview.component";
+import { Routes, Route } from "react-router-dom";
+import Category from "../category/category.component";
 
 const Shop = () => {
-  //products with mock updated to categoriesMap with Firebase db
-  const {categoriesMap} = useContext(CategoriesContext);
-
   return (
-    <Fragment>
-    {
-      Object.keys(categoriesMap).map((title) => (
-        <Fragment key={title}>
-          <h2>{title}</h2>
-          <div className="products-container">
-            {categoriesMap[title].map((product) => (
-              <ProductCard key={product.id} product={product}/>
-            ))}
-          </div>
-        </Fragment>
-      ))
-    }
-    </Fragment>
+    <Routes>
+      <Route index element={<CategoriesPreview />} />
+      {/* uses index as the default component to display with 'shop/*' endpoint */}
+      <Route path=":category" element={<Category />} />
+      {/* path=":[path]" indicates a path that will be passed as a parameter from element */}
+    </Routes>
   );
 }
  
