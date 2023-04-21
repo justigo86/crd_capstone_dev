@@ -4,10 +4,12 @@ import "./checkout-item.styles.scss";
 
 const CheckoutItem = ({cartItem}) => {
   const { name, quantity, imageUrl, price } = cartItem;
-  const { addItemToCart, removeItemFromCart } = useContext(CartContext);
+  const { addItemToCart, removeItemFromCart, clearItemFromCart } = useContext(CartContext);
 
+  //handlers used for code optimization
   const removeItemHandler = () => removeItemFromCart(cartItem);
   const addItemHandler = () => addItemToCart(cartItem);
+  const clearItemHandler = () => clearItemFromCart(cartItem);
 
   return (
     <div className="checkout-item-container">
@@ -16,12 +18,12 @@ const CheckoutItem = ({cartItem}) => {
       </div>
       <div className="name">{name}</div>
       <div className="quantity">
-        <span className="arrow" onClick={removeItemHandler}></span>
+        <div className="arrow" onClick={removeItemHandler}>&#10094;</div>
         <span className="value">{quantity}</span>
-        <span className="arrow" onClick={addItemHandler}></span>
+        <div className="arrow" onClick={addItemHandler}>&#10095;</div>
       </div>
       <div className="price">{price}</div>
-      <div className="remove-button">&#10005;</div>
+      <div className="remove-button" onClick={clearItemHandler}>&#10005;</div>
     </div>
   );
 }
