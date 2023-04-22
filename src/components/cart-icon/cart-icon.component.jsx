@@ -8,8 +8,6 @@ const CartIcon = () => {
 
   const toggleDropdown = () => setCartOpen(!cartOpen);
 
-
-
   return (
     <div className="cart-icon-container" onClick={toggleDropdown}>
       <ShoppingIcon className="shopping-icon" />

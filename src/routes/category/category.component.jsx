@@ -17,13 +17,16 @@ const Category = () => {
   }, [category, categoriesMap])
 
   return (
-    <div className="category-container">
-      {
-        products && products.map((product) => <ProductCard key={product.id} product={product} />)
-      }
-      {/* because categoriesMap starts as empty - cannot attempt to render until categoriesMap data asynchronously populates
-        this is the reason for the short circuit operator (&&) */}
-    </div>
+    <>
+      <h2 className="category-title">{category.toUpperCase()}</h2>
+      <div className="category-container">
+        {
+          products && products.map((product) => <ProductCard key={product.id} product={product} />)
+        }
+        {/* because categoriesMap starts as empty - cannot attempt to render until categoriesMap data asynchronously populates
+          this is the reason for the short circuit operator (&&) */}
+      </div>
+    </>
   );
 }
  

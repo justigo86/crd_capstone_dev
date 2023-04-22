@@ -1,6 +1,7 @@
 $sub-color: grey;
 $main-color: black;
 
+//define styles that can be re-used w. @include
 @mixin shrinkLabel {
   top: -14px;
   font-size: 12px;
@@ -29,7 +30,7 @@ $main-color: black;
     }
 
     &:focus ~ .form-input-label {   //subsequent-sibling combinator
-      @include shrinkLabel();
+      @include shrinkLabel();   //using @mixin declared above
     }
   }
 
