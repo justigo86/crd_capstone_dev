@@ -40,7 +40,6 @@ export const UserProvider = ({ children }) => {
   // const [currentUser, setCurrentUser] = useState(null);  //useState and Context now being set by Reducer
 
   //Reducer state management
-  
   const [ state, dispatch ] = useReducer( userReducer, INITIAL_STATE );
   const { currentUser } = state;
   const setCurrentUser = (user) => {
