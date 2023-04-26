@@ -31,7 +31,7 @@ const userReducer = (state, action) => {
 
 const INITIAL_STATE = {
   currentUser: null,
-}
+};
 
 //alias for UserContext.Provider - to be used in index.js to wrap around components & use throughout app
 //by wrapping it around <App /> - will be able to use with App and all children components
