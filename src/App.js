@@ -4,8 +4,23 @@ import Home from "./routes/home/home.component";
 import Authentication from "./routes/authentication/authentication.component";
 import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
+import { useEffect } from "react";
+import { onAuthStateChangedListener, createUserDocumentFromAuth } from "../utils/firebase/firebase.utils";
+import { setCurrentUser } from "./store/user/user.action";
+import { useDispatch } from "react-redux";
 
 const App = () => {
+  const dispatch = useDispatch();
+  //useEffect() copied from old user.context
+  useEffect(() => {
+    const unsubscribe = onAuthStateChangedListener((user) => {
+      if (user) {
+        createUserDocumentFromAuth(user);
+      }
+      dispatch(setCurrentUser(user)); //initiating Store state change with dispatch
+    })
+    return unsubscribe;
+  }, [dispatch]);   //dispatch is not needed here as it does not change - linter requires it
   return (
     <Routes>
       <Route path="/" element={<Navigation />}>
