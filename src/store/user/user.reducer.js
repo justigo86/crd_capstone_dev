@@ -7,8 +7,8 @@ const INITIAL_STATE = {
 };
 
 //Reducer function
-export const userReducer = (state = INITIAL_STATE, action) => {
-    //state given default value
+export const userReducer = (state = INITIAL_STATE, action = {}) => {
+    //state/action given default value - in case no values are passed, wont error
   const { type, payload } = action;
 
   switch( type ) {
