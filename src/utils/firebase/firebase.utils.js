@@ -74,12 +74,18 @@ export const getCategoriesAndDocuments = async () => {
   const q = query(collectionRef); //retrieves object of data with query
   const querySnapshot = await getDocs(q); //asynchronously saves snapshot of the object
   //querySnapshot.docs retrieves an array from the snapshot
-  const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
-    const { title, items } = docSnapshot.data();
-    acc[title.toLowerCase()] = items;
-    return acc;
-  }, {});
-  return categoryMap;
+
+  //how data was handled before implementing the Reducer - logic moved to category.selector
+  // const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+  //   const { title, items } = docSnapshot.data();
+  //   acc[title.toLowerCase()] = items;
+  //   return acc;
+  // }, {});
+  // return categoryMap;
+
+  //data handled with Reducer
+  return querySnapshot.docs.map((docSnapshot) => docSnapshot.data());
+
 }
 
 export const createUserDocumentFromAuth = async (userAuth, additionalInfo = {}) => {  //take data from from auth and store in Firestore

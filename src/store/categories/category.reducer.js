@@ -1,7 +1,8 @@
-import { CATEGORIES_ACTION_TYPES } from "./category.types";
+import CATEGORIES_ACTION_TYPES from "./category.types";
 
 const CATEGORIES_INITIAL_STATE = {
-  categoriesMap: {},
+  // updated to an array upon changing data pulled by Reducer (firebase.utils) array
+  categories: [],
 };
 
 //Reducer function
@@ -9,10 +10,10 @@ export const categoriesReducer = (state = CATEGORIES_INITIAL_STATE, action = {})
   const { type, payload } = action;
 
   switch( type ) {
-    case CATEGORIES_ACTION_TYPES.SET_CATEGORIES_MAP:
+    case CATEGORIES_ACTION_TYPES.SET_CATEGORIES:
       return {
         ...state,
-        categoriesMap: payload,
+        categories: payload,
       }
     default:
       return state;
