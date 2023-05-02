@@ -1,37 +1,49 @@
 import { compose, createStore, applyMiddleware } from "redux";
 // import logger from "redux-logger";
 import { rootReducer } from "./root-reducer";
+import storage from "redux-persist/lib/storage";
+import { persistReducer, persistStore } from "redux-persist";
+import { loggerMiddlewareRecreation } from "./middleware/logger";
 
-//reusable, chained curry function - the functions return from one to another
-//first function receives the store object
-//then returns another function that receives the next method
-//next returns another function that receives the action
-//then the middleware code/function
-//this middleware function performs same actions as redux-logger/logger but unbundles logs
-const loggerMiddlewareRecreation = (store) => (next) => (action) => {
-  if (!action.type) {
-    return next(action);
-  }
-
-  console.log("type: ", action.type);
-  console.log("payload: ", action.payload);
-  console.log("currentState: ", store.getState()); //shows value of the current state at that time
-
-  next(action); //action hits middleware and Reducers, updates Reducers and store - once finished, following code will fire
-  //because Reducers are called - all useSelector methods are called
-
-  console.log("nextState: ", store.getState()); //shows the state after next finishes
+const persistConfig = {
+  key: "root",
+  storage: storage,
+  blacklist: ["user"], //blacklist because user state is being handled by AuthStateListener
 };
-const middleWares = [loggerMiddlewareRecreation];
 
-// const middleWares = [logger];  //removed upon addition of loggerMiddleware
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+//Persist's way of combining Reducers - passed config and Reducer to persist State
+
+// const middleWares = [logger];  //removed upon addition of loggerMiddlewareRecreation
 //middleWares are store enhancer - logger serving as enhancer
 //there are several enhancers - middleWare is just the primary one used
 
-const composedEnhancers = compose(applyMiddleware(...middleWares));
+const middleWares = [
+  process.env.NODE_ENV !== "production" && loggerMiddlewareRecreation,
+].filter(Boolean);
+//only render logger if the App environment is not in production (dev env)
+//using .filter returns empty array if returns false - returns loggerMiddlewareRecreation if true
+
+const composeEnhancer =
+  (process.env.NODE_ENV !== "production" &&
+    window &&
+    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
+  compose;
+//if not in production //and there is a window object //and that window object has Redux DevTools method
+// use DevTools Compose - otherwise, just use Redux Compose
+
+// const composedEnhancers = compose(applyMiddleware(...middleWares));  //replaced with composeEnhancer
 //compose composes single-argument functions - last function can take multiple arguments
 //compose(f, g, h) is identical to doing (...args) => f(g(h(...args))).
+const composedEnhancers = composeEnhancer(applyMiddleware(...middleWares));
 
+// export const store = createStore(rootReducer, undefined, composedEnhancers);
 //Root Reducer - combination of all Reducers
-export const store = createStore(rootReducer, undefined, composedEnhancers);
-//note: not actually deprecated - just a warning that this process could be easier
+//note: createStore is not actually deprecated - just a warning that this process could be easier
+
+export const store = createStore(
+  persistedReducer,
+  undefined,
+  composedEnhancers
+);
+export const persistor = persistStore(store);
