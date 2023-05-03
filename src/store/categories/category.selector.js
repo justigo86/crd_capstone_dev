@@ -24,3 +24,8 @@ export const selectCategoriesMap = createSelector(
 
 //data pulled from Firebase is pulled as Array in firebase.utils (state.categories.categories)
 //data then reduced into selectCatrgoriesMap by
+
+export const selectCategoriesIsLoading = createSelector(
+  [selectCategoryReducer],
+  (categorySlice) => categorySlice.isLoading
+);
