@@ -3,20 +3,25 @@ import CategoriesPreview from "../../routes/categories-preview/categories-previe
 import { Routes, Route } from "react-router-dom";
 import Category from "../category/category.component";
 import { useEffect } from "react";
-import { getCategoriesAndDocuments } from "../../utils/firebase/firebase.utils";
-import { setCategories } from "../../store/categories/category.action";
+// import { getCategoriesAndDocuments } from "../../utils/firebase/firebase.utils";
+import { fetchCategoriesAsync } from "../../store/categories/category.action";
 import { useDispatch } from "react-redux";
 
 const Shop = () => {
   const dispatch = useDispatch();
 
+  //always wrap useEffect async functionality in a function inside useEffect
+  // useEffect(() => {    //moved contents to cat.actions due to Redux Thunk
+  //   const getCategoriesMap = async () => {
+  //     const categoriesArray = await getCategoriesAndDocuments("categories");
+  //     dispatch(setCategories(categoriesArray));
+  //   }
+  //   getCategoriesMap();
+  // }, [dispatch]);
+
+  //with middleware/Thunk - useEffect only calls dispatch on action function
   useEffect(() => {
-    //always wrap useEffect async functionality in a function inside useEffect
-    const getCategoriesMap = async () => {
-      const categoriesArray = await getCategoriesAndDocuments("categories");
-      dispatch(setCategories(categoriesArray));
-    }
-    getCategoriesMap();
+    dispatch(fetchCategoriesAsync());
   }, [dispatch]);
 
   return (
@@ -27,6 +32,6 @@ const Shop = () => {
       {/* path=":[path]" indicates a path that will be passed as a parameter from element */}
     </Routes>
   );
-}
- 
+};
+
 export default Shop;

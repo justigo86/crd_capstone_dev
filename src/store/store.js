@@ -4,6 +4,7 @@ import { rootReducer } from "./root-reducer";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { loggerMiddlewareRecreation } from "./middleware/logger";
+import thunk from "redux-thunk";
 
 const persistConfig = {
   key: "root",
@@ -20,6 +21,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const middleWares = [
   process.env.NODE_ENV !== "production" && loggerMiddlewareRecreation,
+  thunk,
 ].filter(Boolean);
 //only render logger if the App environment is not in production (dev env)
 //using .filter returns empty array if returns false - returns loggerMiddlewareRecreation if true
