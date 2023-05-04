@@ -4,13 +4,17 @@ import { rootReducer } from "./root-reducer";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore } from "redux-persist";
 import { loggerMiddlewareRecreation } from "./middleware/logger";
-import thunk from "redux-thunk";
+// import thunk from "redux-thunk";
+import createSagaMiddleware from "redux-saga";
+import { rootSaga } from "./root-saga";
 
 const persistConfig = {
   key: "root",
   storage: storage,
   blacklist: ["user"], //blacklist because user state is being handled by AuthStateListener
 };
+
+const sagaMiddleware = createSagaMiddleware();
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 //Persist's way of combining Reducers - passed config and Reducer to persist State
@@ -21,7 +25,8 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const middleWares = [
   process.env.NODE_ENV !== "production" && loggerMiddlewareRecreation,
-  thunk,
+  // thunk,
+  sagaMiddleware,
 ].filter(Boolean);
 //only render logger if the App environment is not in production (dev env)
 //using .filter returns empty array if returns false - returns loggerMiddlewareRecreation if true
@@ -48,4 +53,6 @@ export const store = createStore(
   undefined,
   composedEnhancers
 );
+
+sagaMiddleware.run(rootSaga);
 export const persistor = persistStore(store);
