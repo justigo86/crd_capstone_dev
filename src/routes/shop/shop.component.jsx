@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import Category from "../category/category.component";
 import { useEffect } from "react";
 // import { getCategoriesAndDocuments } from "../../utils/firebase/firebase.utils";
-import { fetchCategoriesAsync } from "../../store/categories/category.action";
+import { fetchCategoriesStart } from "../../store/categories/category.action";
 import { useDispatch } from "react-redux";
 
 const Shop = () => {
@@ -21,7 +21,8 @@ const Shop = () => {
 
   //with middleware/Thunk - useEffect only calls dispatch on action function
   useEffect(() => {
-    dispatch(fetchCategoriesAsync());
+    // dispatch(fetchCategoriesAsync());   //used with Thunk
+    dispatch(fetchCategoriesStart()); //used with Saga - because Saga listening for Start
   }, [dispatch]);
 
   return (
