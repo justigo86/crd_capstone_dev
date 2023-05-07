@@ -102,10 +102,8 @@ export const createUserDocumentFromAuth = async (
   const userDocRef = doc(db, "users", userAuth.uid); //see if there is an existing document reference
   //3 arguments = database instance, document path, user.uid (pulled from Google User SignIn fetch response)
   //give me the document from within the DB, within "users" collection, for this user ID
-  console.log(userDocRef);
 
   const userSnapshot = await getDoc(userDocRef);
-  console.log(userSnapshot);
 
   //if user snapshot does not exist - create user data
   if (!userSnapshot.exists()) {

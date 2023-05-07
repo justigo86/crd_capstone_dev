@@ -5,16 +5,18 @@ import Authentication from "./routes/authentication/authentication.component";
 import Shop from "./routes/shop/shop.component";
 import Checkout from "./routes/checkout/checkout.component";
 import { useEffect } from "react";
-import {
-  // onAuthStateChangedListener,
-  // createUserDocumentFromAuth,
-  getCurrentUser,
-} from "./utils/firebase/firebase.utils";
+// import {
+//   onAuthStateChangedListener,
+//   createUserDocumentFromAuth,
+//   getCurrentUser,
+// } from "./utils/firebase/firebase.utils";
+import { useDispatch } from "react-redux";
+import { checkUserSession } from "./store/user/user.action";
 // import { setCurrentUser } from "./store/user/user.action";
 // import { useDispatch } from "react-redux";
 
 const App = () => {
-  // const dispatch = useDispatch();  //not currently being used as moving to Saga (after Thunk)
+  const dispatch = useDispatch();
 
   //useEffect() copied from old user.context
   //commented out as functionality has been moved to firebase.utils
@@ -29,9 +31,9 @@ const App = () => {
   // }, [dispatch]);   //dispatch is not needed here as it does not change - linter requires it
 
   useEffect(() => {
-    //used to move user auth into Saga
-    getCurrentUser().then((user) => console.log(user));
-  }, []);
+    // getCurrentUser().then((user) => console.log(user));
+    dispatch(checkUserSession());
+  }, [dispatch]);
 
   return (
     <Routes>
