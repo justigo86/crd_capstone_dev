@@ -1,8 +1,13 @@
 import { useState } from "react";
-import { createAuthUserWithEmailAndPassword, createUserDocumentFromAuth } from "../../utils/firebase/firebase.utils";
+// import {
+//   createAuthUserWithEmailAndPassword,
+//   createUserDocumentFromAuth,
+// } from "../../utils/firebase/firebase.utils";
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 import "./sign-up-form.styles.scss";
+import { useDispatch } from "react-redux";
+import { signUpStart } from "../../store/user/user.action";
 
 //create object for useState to update
 //note: we do not want to store this information because it is sensitive
@@ -11,18 +16,20 @@ const defaultFormFields = {
   email: "",
   password: "",
   confirmPassword: "",
-}
+};
 
 const SignUpForm = () => {
+  const dispatch = useDispatch();
   const [formFields, setFormFields] = useState(defaultFormFields);
   const { displayName, email, password, confirmPassword } = formFields;
 
   // const { setUserContext } = useContext(UserContext);  - //functionality moved/centralized in user.context
 
-  const handleChange = (event) => {   //change has been generalized for incoming form data entry
+  const handleChange = (event) => {
+    //change has been generalized for incoming form data entry
     const { name, value } = event.target;
-    setFormFields({ ...formFields, [name]: value})  //update formFields with object name and entered value
-  }
+    setFormFields({ ...formFields, [name]: value }); //update formFields with object name and entered value
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -32,21 +39,24 @@ const SignUpForm = () => {
     }
 
     try {
-      const {user} = await createAuthUserWithEmailAndPassword(email, password);
-      await createUserDocumentFromAuth(user, { displayName});
+      // removed moving to Sagas
+      // const {user} = await createAuthUserWithEmailAndPassword(email, password);
+      // await createUserDocumentFromAuth(user, { displayName});
+
+      dispatch(signUpStart(email, password, displayName));
       resetFormFields();
     } catch (err) {
-      if(err.code === "auth/email-already-in-use") {
-        alert("Cannot create user. Email already in use.")
+      if (err.code === "auth/email-already-in-use") {
+        alert("Cannot create user. Email already in use.");
       } else {
-        console.log("User creation experienced an error.", err)
+        console.log("User creation experienced an error.", err);
       }
     }
-  }
+  };
 
   const resetFormFields = () => {
     setFormFields(defaultFormFields);
-  }
+  };
 
   return (
     <div className="sign-up-container">
@@ -62,7 +72,7 @@ const SignUpForm = () => {
           required
           value={displayName}
         />
-        
+
         <FormInput
           label="Email"
           type="email"
@@ -72,7 +82,7 @@ const SignUpForm = () => {
           required
           value={email}
         />
-        
+
         <FormInput
           label="Password"
           type="password"
@@ -82,7 +92,7 @@ const SignUpForm = () => {
           required
           value={password}
         />
-        
+
         <FormInput
           label="Confirm Password"
           type="password"
@@ -96,6 +106,6 @@ const SignUpForm = () => {
         <Button type="submit">Sign Up</Button>
       </form>
     </div>
-  )
+  );
 };
 export default SignUpForm;
