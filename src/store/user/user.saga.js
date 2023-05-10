@@ -6,10 +6,13 @@ import {
   getCurrentUser,
   signInAuthUserWithEmailAndPassword,
   signInWithGooglePopup,
+  signOutUser,
 } from "../../utils/firebase/firebase.utils";
 import {
   signInFailed,
   signInSuccess,
+  signOutFailed,
+  signOutSuccess,
   signUpFailed,
   signUpSuccess,
 } from "./user.action";
@@ -76,6 +79,15 @@ export function* signInAfterSignUp({ user, additionalDetails }) {
   yield call(getSnapshotFromUserAuth, user, additionalDetails);
 }
 
+export function* signOut() {
+  try {
+    yield call(signOutUser);
+    yield put(signOutSuccess());
+  } catch (error) {
+    yield put(signOutFailed(error));
+  }
+}
+
 //above are methods - called within the sagas listed below
 
 export function* onGoogleSignInStart() {
@@ -94,9 +106,12 @@ export function* onCheckUserSession() {
 export function* onSignUpStart() {
   yield takeLatest(USER_ACTION_TYPES.SIGN_UP_START, signUp);
 }
-
 export function* onSignUpSuccess() {
   yield takeLatest(USER_ACTION_TYPES.SIGN_UP_SUCCESS, signInAfterSignUp);
+}
+
+export function* onSignOutStart() {
+  yield takeLatest(USER_ACTION_TYPES.SIGN_OUT_START, signOut);
 }
 
 //and below is the function to call all sagas
@@ -108,5 +123,6 @@ export function* userSagas() {
     call(onEmailSignInStart),
     call(onSignUpStart), //used in sign-up-form to dipatch sagas
     call(onSignUpSuccess),
+    call(onSignOutStart),
   ]);
 }
