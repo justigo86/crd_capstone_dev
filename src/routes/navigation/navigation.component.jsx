@@ -3,19 +3,22 @@ import { ReactComponent as CrwnLogo } from "../../assets/crown.svg";
 import "./navigation.styles.scss";
 // import { useContext } from "react";
 // import { UserContext } from "../../contexts/user.context";
-import { signOutUser } from "../../utils/firebase/firebase.utils";
 import CartIcon from "../../components/cart-icon/cart-icon.component";
 import CartDropdown from "../../components/cart-dropdown/cart-dropdown.component";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 // import { CartContext } from "../../contexts/cart.context";
 import { selectCurrentUser } from "../../store/user/user.selector";
 import { selectCartOpen } from "../../store/cart/cart.selector";
+import { signOutStart } from "../../store/user/user.action";
 
 const Navigation = () => {
+  const dispatch = useDispatch();
   // const { currentUser } = useContext(UserContext); //pulling currentUser value from Context component
   //userContext replaced by userReducer
   const currentUser = useSelector(selectCurrentUser);
   const cartOpen = useSelector(selectCartOpen);
+
+  const signOutUser = () => dispatch(signOutStart());
 
   //removed with Reducer implementation
   // const { cartOpen } = useContext(CartContext);
