@@ -1,5 +1,6 @@
 {
-  "name": "crwn-clothing",
+  "homepage": "https://justigo86.github.io/crd_capstone_dev",
+  "name": "crd_capstone_dev",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
